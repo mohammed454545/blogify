@@ -4,7 +4,7 @@ const postSchema=new mongoose.Schema(
   {
     title:{
     type:String,
-    require:true,
+    required:true,
   },
   image:{
     type:String,
@@ -16,11 +16,11 @@ const postSchema=new mongoose.Schema(
   },
   content:{
     type:String,
-    require:true,
+    required:true,
   },
   author:{
-    type:mongoose.schema.Types.ObjectId,
-    require:true,
+    type:mongoose.Schema.Types.ObjectId,
+    required:true,
     ref:'User'
   },
   shares:{
@@ -32,24 +32,24 @@ const postSchema=new mongoose.Schema(
     default:0,
   },
   category:{
-    type:mongoose.schema.Types.ObjectId,
-    require:true,
-    ref:"Category"
+    type:mongoose.Schema.Types.ObjectId,
+    required:true,
+    ref:'Category'
   },
   shedduledpublished:{
     type:Date,
     default:null,
   },
   likes:[{
-    type:mongoose.schema.Types.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     ref:'User'
   }],
   dislikes:[{
-    type:mongoose.schema.Types.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     ref:'User'
   }],
   comments:[{
-    type:mongoose.schema.Types.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     ref:'Comment'
   }],
 

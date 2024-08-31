@@ -4,25 +4,21 @@ const userSchema=new mongoose.Schema(
   {
     username:{
     type:String,
-    require:true,
+    required:true,
   },
   email:{
     type:String,
-    require:true,
-  },
-  username:{
-    type:String,
-    require:true,
+    required:true,
   },
   role:{
     type:String,
-    require:true,
+    required:true,
     enum:["user","admin"],
     default:'user',
   },
   password:{
     type:String,
-    require:true,
+    required:true,
   },
   lastLogin:{
     type:Date,
@@ -34,7 +30,7 @@ const userSchema=new mongoose.Schema(
   },
   AccountLevel:{
     type:String,
-    require:true,
+    required:true,
     enum:["bronze","silver","gold"],
     default:'bronze'
   },

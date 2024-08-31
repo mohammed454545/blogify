@@ -4,11 +4,11 @@ const categorySchema=new mongoose.Schema(
   {
     name:{
     type:String,
-    require:true,
+    required:true,
   },
   author:{
-    type:mongoose.schema.Types.ObjectId,
-    require:true,
+    type:mongoose.Schema.Types.ObjectId,
+    required:true,
     ref:'User'
   },
   shares:{
@@ -17,7 +17,7 @@ const categorySchema=new mongoose.Schema(
   },
   
   post:{
-    type:mongoose.schema.Types.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     ref:'Post'
   },
   

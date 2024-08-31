@@ -2,20 +2,20 @@ const mongoose=require ('mongoose')
 //schema
 const commentSchema=new mongoose.Schema(
   {
-    text:{
+    message:{
     type:String,
-    require:true,
+    required:true,
   },
   author:{
-    type:mongoose.schema.Types.ObjectId,
-    require:true,
+    type:mongoose.Schema.Types.ObjectId,
+    required:true,
     ref:'User'
   },
 
 
   
   postId:{
-    type:mongoose.schema.Types.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     ref:'Post',
     required:true,
   },
