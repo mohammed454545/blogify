@@ -96,30 +96,79 @@ exports.getProfile= asyncHandler(async(req,res,next)=>{
 //@route POST /api/v1/users/block/:userIdToBlock
 //@access Private
 
-exports.blockUser=asyncHandler(async(req,res)=>{
-  //*find the user to blocked
-  const userIdToBlock=req.params.userIdToBlock;
+exports.blockUser = asyncHandler(async (req, res) => {
+  // * العثور على المستخدم الذي سيتم حظره
+  const userIdToBlock = req.params.userIdToBlock;
   const userToBlock = await User.findById(userIdToBlock);
-  if (!userToBlock){
-    throw new Error ('user to block not found')
+  if (!userToBlock) {
+      throw new Error('user to block not found');
   }
-  //! user who is blocking
-  const userBlocking=req.userAuth._id;
-  //check if user is blocking him/hereself
-  if (userIdToBlock.toString()===userBlocking.toString){
-    throw new Error ('cannot block yourself');
+
+  // ! المستخدم الذي يقوم بالحظر
+  const userBlocking = req.userAuth._id;
+
+  // التحقق مما إذا كان المستخدم يحظر نفسه
+  if (userIdToBlock.toString() === userBlocking.toString()) {
+      throw new Error('cannot block yourself');
   }
-  //find the current user 
-  const currentUser =await User.findById(userIdToBlock);
-  //? check if user already blocked
-  if (currentUser?.blockUsers?.includes(userIdToBlock)){
-    throw new Error ('Useralready blocked');
+
+  // العثور على المستخدم الحالي
+  const currentUser = await User.findById(userBlocking);
+
+  // ? التحقق مما إذا كان المستخدم قد تم حظره بالفعل
+  if (currentUser?.blokedUsers?.includes(userIdToBlock)) {
+      throw new Error('User already blocked');
   }
-  //push the user to be blocked in the array of the current user
-  currentUser?.blockedUsers.push(userIdToBlock);
-  await currentUser.save()
+
+  // التأكد من أن blockedUsers معرفة كمصفوفة
+  if (!currentUser.blokedUsers) {
+      currentUser.blokedUsers = [];
+  }
+
+  // إضافة المستخدم إلى قائمة الحظر للمستخدم الحالي
+  currentUser.blokedUsers.push(userIdToBlock);
+  await currentUser.save();
+
   res.json({
-    status:'success'
-    message:'user blocked successfully'
-  })
-})
+      status: 'success',
+      message: 'user blocked successfully'
+  });
+});
+
+
+
+
+//@desc block a user
+//@route POST /api/v1/users/block/:userIdToBlock
+//@access Private
+
+exports.unblockUser = asyncHandler(async (req, res) => {
+  // * العثور على المستخدم الذي سيتم حظره
+  const userIdToUnBlock = req.params.userIdToUnBlock;
+  const userToUnBlock = await User.findById(userIdToUnBlock);
+  if (!userToUnBlock) {
+      throw new Error('user to unblock not found');
+  }
+
+  // ! المستخدم الذي يقوم بالحظر
+   const userUnBlocking = req.userAuth._id;
+
+
+
+  // العثور على المستخدم الحالي
+  const currentUser = await User.findById(userUnBlocking);
+
+  // ? التحقق مما إذا كان المستخدم قد تم حظره بالفعل
+  if (!currentUser?.blokedUsers?.includes(userIdToUnBlock)) {
+      throw new Error('User not blocked');
+  }
+
+  // إضافة المستخدم إلى قائمة الحظر للمستخدم الحالي
+  currentUser.blokedUsers=currentUser.blokedUsers.filter((id)=>id.toString()!==userIdToUnBlock.toString());
+  await currentUser.save();
+
+  res.json({
+      status: 'success',
+      message: 'user unblocked successfully'
+  });
+});

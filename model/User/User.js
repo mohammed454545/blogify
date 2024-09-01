@@ -53,7 +53,7 @@ const userSchema=new mongoose.Schema(
     email:{type:String,default:true},
     //..other notifications (sms)
   },
-  location:{
+  gander:{
     type:String,
     enum:['male','femaie']
   },
