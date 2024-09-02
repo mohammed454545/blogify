@@ -172,3 +172,37 @@ exports.unblockUser = asyncHandler(async (req, res) => {
       message: 'user unblocked successfully'
   });
 });
+
+
+
+//@desc who view my profile
+//@route Get /api/v1/users/profile-viewer/:userProfileId
+//@access Private
+
+exports.profileViewers = asyncHandler(async (req, res) => {
+  //* find user that we want to view his profile
+  const userProfileId = req.params.userProfileId;
+  const userProfile = await User.findById(userProfileId);
+  if (!userProfile) {
+      throw new Error('user not found');
+  }
+
+
+  // العثور على المستخدم الحالي
+  const currentUserId=req.userAuth._id
+  const currentUser = await User.findById(currentUserId);
+
+  // ? التحقق مما إذا كان المستخدم في قائمة المسموح لهم بمشاهدة الملف الشخصي
+  if (currentUser?.profileViewers?.includes(currentUserId)) {
+      throw new Error('you hav already viewed this profile');
+  }
+
+  // إضافة المستخدم إلى قائمة الحظر للمستخدم الحالي
+  userProfile.profileViewers.push(currentUserId);
+  await userProfile.save();
+
+  res.json({
+      status: 'success',
+      message: 'you have successfully viewed his/here profile'
+  });
+});
